@@ -5,7 +5,7 @@ from glob import glob
 import numpy as np
 from keras import layers
 from keras import models
-from keras.layers.advanced_activations import LeakyReLU
+from keras.layers import LeakyReLU
 from keras.optimizers import Adam
 import keras.backend as K
 import librosa
@@ -24,7 +24,10 @@ import pandas as pd
 import numpy as np
 from keras_preprocessing.image import ImageDataGenerator
 import pickle
-
+#import shuffle
+from sklearn.utils import shuffle
+#change these 3 lines for each task
+#1 is speaker verification, 2 is fake voice recognition, 3 is command detection
 train_data_path='data/train/'
 test_data_path='data/test/'
 wav_path = 'data/wav/'
@@ -34,12 +37,15 @@ def append_ext(fn):
     return fn.replace(".wav",".png")
 
 # Load du lieu train va test tu file csv
-traindf=pd.read_csv('data/train.csv',dtype=str)
-testdf=pd.read_csv('data/test.csv',dtype=str)
+traindf=pd.read_csv('data/train.csv',dtype=str) #change this for each task
+testdf=pd.read_csv('data/test.csv',dtype=str) #change this for each task
+
+traindf = shuffle(traindf)
+
 traindf["slice_file_name"]=traindf["slice_file_name"].apply(append_ext)
 testdf["slice_file_name"]=testdf["slice_file_name"].apply(append_ext)
 
-datagen=ImageDataGenerator(rescale=1./255.,validation_split=0.25)
+datagen=ImageDataGenerator(rescale=1./255., validation_split=0.2)
 
 # Load generator train
 train_generator=datagen.flow_from_dataframe(
@@ -54,7 +60,7 @@ train_generator=datagen.flow_from_dataframe(
     class_mode="categorical",
     target_size=(64,64))
 
-# Load generator val
+
 valid_generator=datagen.flow_from_dataframe(
     dataframe=traindf,
     directory=train_data_path,
@@ -66,6 +72,12 @@ valid_generator=datagen.flow_from_dataframe(
     shuffle=True,
     class_mode="categorical",
     target_size=(64,64))
+# Load generator val
+#check len generator_train
+# print(len(train_generator))
+# for i in range(20):
+#     d = next(train_generator)
+#     print(d[1], end = ' ')
 '''
 # Load generator train
 train_generator_vgg=datagen.flow_from_dataframe(
@@ -118,8 +130,10 @@ model.add(Flatten())
 model.add(Dense(512))
 model.add(Activation('relu'))
 model.add(Dropout(0.5))
-model.add(Dense(10, activation='softmax'))
-model.compile(optimizers.rmsprop(lr=0.0005, decay=1e-6),loss="categorical_crossentropy",metrics=["accuracy"])
+model.add(Dense(97, activation='softmax'))
+# model.compile(optimizers.rmsprop(lr=0.0005, decay=1e-6),loss="categorical_crossentropy",metrics=["accuracy"])
+model.compile(optimizers.RMSprop(),loss="categorical_crossentropy",metrics=["accuracy"])
+
 model.summary()
 
 '''
@@ -161,14 +175,15 @@ STEP_SIZE_TRAIN=train_generator.n//train_generator.batch_size
 STEP_SIZE_VALID=valid_generator.n//valid_generator.batch_size
 
 # Train model
-model.fit_generator(generator=train_generator,
+model.fit(train_generator,
                     steps_per_epoch=STEP_SIZE_TRAIN,
                     validation_data=valid_generator,
                     validation_steps=STEP_SIZE_VALID,
-                    epochs=100,verbose=1
+                    epochs=100,verbose=1,
+                    
 )
 
-model.save("model.h5");
+model.save("model2.h5")
 # Luu ten class
 #np.save('model_indices', train_generator.class_indices)
 with open('model_indices.pickle', 'wb') as handle:

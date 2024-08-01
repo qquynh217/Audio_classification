@@ -1,10 +1,17 @@
-# MiAI_Sound_Classifier
-Train computer to listen and classify sound by CNN
+# AUDIO CLASSIFICAION WITH CUSTOM DATASET
+    - (BASED ON MIAI AUDIO CLASSIFICATION PROJECT)
 
-Article link:  http://ainoodle.tech/2019/10/27/day-cho-may-tinh-nghe-va-phan-biet-am-thanh-bang-cnn/
+## Dataset
+Add data folder to this project, containing one train csv file and one test csv file with two columns: slice_file_name and class. One wav folder contains train and test wav audio raw data
+Run preprocessing.py if you don't have spectrogram folder
+    * 1 is speaker verification
+    * 2 is fake voice recognition
+    * 3 is command detection
 
-#MìAI <br>
-Fanpage: http://facebook.com/miaiblog<br>
-Group trao đổi, chia sẻ: https://www.facebook.com/groups/miaigroup<br>
-Website: http://ainoodle.tech<br>
-Youtube: http://bit.ly/miaiyoutube<br>
+## Train
+    * run train_model.py for speaker verificaion task
+    * run train_model_fake_task.py for fake voice recognitinon task
+    * run train_model_command_detection.py for command detection task
+
+## Testing
+run test_model.py and change some lines (noted)

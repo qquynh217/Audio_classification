@@ -6,7 +6,7 @@ from glob import glob
 import numpy as np
 from keras import layers
 from keras import models
-from keras.layers.advanced_activations import LeakyReLU
+from keras.layers import LeakyReLU
 from keras.optimizers import Adam
 import keras.backend as K
 import librosa
@@ -31,10 +31,10 @@ def append_ext(fn):
     return fn.replace(".wav",".png")
 
 # Load du lieu test
-testdf=pd.read_csv('data/test.csv',dtype=str)
+testdf=pd.read_csv('data/test_command.csv',dtype=str)
 testdf["slice_file_name"]=testdf["slice_file_name"].apply(append_ext)
 
-test_data_path='data/test/'
+test_data_path='data/test3/'
 
 
 
@@ -69,17 +69,20 @@ STEP_SIZE_TEST=test_generator.n//test_generator.batch_size
 test_generator.reset()
 
 # Load model da train
-model = load_model('model.h5')
-pred = model.predict_generator(test_generator,steps=STEP_SIZE_TEST,verbose=1)
+name_model = 'model_command_detect.h5'
+model = load_model(name_model)
+pred = model.predict(test_generator,steps=STEP_SIZE_TEST,verbose=1)
 
 
 # Lay class predict probality lon nhat
 predicted_class_indices=np.argmax(pred,axis=1)
-# Load class name tu file
+
+
+# # Load class name tu file
 with open('model_indices.pickle', 'rb') as handle:
     labels = pickle.load(handle)
 
-# HIen thi ket qua predict ra man hinh
+# # HIen thi ket qua predict ra man hinh
 labels = dict((v,k) for k,v in labels.items())
 predictions = [labels[k] for k in predicted_class_indices]
 print("Prediction values= ",predictions[0:10])
