@@ -26,8 +26,7 @@ from keras_preprocessing.image import ImageDataGenerator
 import pickle
 #import shuffle
 from sklearn.utils import shuffle
-#change these 3 lines for each task
-#1 is speaker verification, 2 is fake voice recognition, 3 is command detection
+
 train_data_path='data/train/'
 test_data_path='data/test/'
 wav_path = 'data/wav/'
@@ -130,7 +129,7 @@ model.add(Flatten())
 model.add(Dense(512))
 model.add(Activation('relu'))
 model.add(Dropout(0.5))
-model.add(Dense(97, activation='softmax'))
+model.add(Dense(97, activation='softmax')) #97 for task 1, 2 for others
 # model.compile(optimizers.rmsprop(lr=0.0005, decay=1e-6),loss="categorical_crossentropy",metrics=["accuracy"])
 model.compile(optimizers.RMSprop(),loss="categorical_crossentropy",metrics=["accuracy"])
 
@@ -182,11 +181,10 @@ model.fit(train_generator,
                     epochs=100,verbose=1,
                     
 )
-
-model.save("model2.h5")
+model.save("model2.h5") #model2.h5 is task 1, model_fake_task and model_comand_detect
 # Luu ten class
 #np.save('model_indices', train_generator.class_indices)
-with open('model_indices.pickle', 'wb') as handle:
+with open('model_indices_speaker_verification.pickle', 'wb') as handle:
     pickle.dump(train_generator.class_indices, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
 # Train model

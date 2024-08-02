@@ -180,14 +180,14 @@ model.fit(train_generator,
                     steps_per_epoch=STEP_SIZE_TRAIN,
                     validation_data=valid_generator,
                     validation_steps=STEP_SIZE_VALID,
-                    epochs=20,verbose=1,
+                    epochs=1,verbose=1,
                     
 )
 
-model.save("model_fake_task.h5")
+model.save("model_test.h5")
 # Luu ten class
 #np.save('model_indices', train_generator.class_indices)
-with open('model_indices.pickle', 'wb') as handle:
+with open('model_indices_fake_task.pickle', 'wb') as handle:
     pickle.dump(train_generator.class_indices, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
 # Train model

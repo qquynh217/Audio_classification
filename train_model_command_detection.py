@@ -187,7 +187,7 @@ model.fit(train_generator,
 model.save("model_command_detect.h5")
 # Luu ten class
 #np.save('model_indices', train_generator.class_indices)
-with open('model_indices.pickle', 'wb') as handle:
+with open('model_indices_command_detect.pickle', 'wb') as handle:
     pickle.dump(train_generator.class_indices, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
 # Train model
