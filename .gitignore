@@ -3,3 +3,4 @@ fake_Dataset
 speech_commands
 *.zip
 *.h5
+data_test/*

@@ -34,8 +34,18 @@ def audiorec_demo_app():
     # TUTORIAL: How to use STREAMLIT AUDIO RECORDER?
     # by calling this function an instance of the audio recorder is created
     # once a recording is completed, audio data will be saved to wav_audio_data
-
-    wav_audio_data = audio_recorder()  # tadaaaa! yes, that's it! :D
+    wav_audio_data = None
+    option = st.selectbox("Select an option", ("Record", "Upload"), index=None)
+    if option == "Upload":
+        upload_file = st.file_uploader(
+            "Choose an audio file", type=["wav"], accept_multiple_files=False
+        )
+        if upload_file is not None:
+            wav_audio_data = upload_file.read()
+    else:
+        wav_audio_data = audio_recorder(
+            key=123, icon_size="2x"
+        )  # tadaaaa! yes, that's it! :D
 
     # add some spacing and informative messages
     col_info, col_space = st.columns([1.5, 0.43])
@@ -51,13 +61,13 @@ def audiorec_demo_app():
     #     wav_audio_data = None
     #     st.rerun()
 
+    current_time_seconds = time.time()
+    file_name = str(int(current_time_seconds * 1000))
     if wav_audio_data is not None:
         # display audio data as received on the Python side
         col_playback, col_space = st.columns([0.58, 0.42])
         with col_playback:
             st.audio(wav_audio_data, format="audio/wav")
-        current_time_seconds = time.time()
-        file_name = str(int(current_time_seconds * 1000))
         st.markdown("### List of functions:")
         st.markdown("1. Command detection")
         if st.button("Predict", key=1):
