@@ -61,39 +61,54 @@ def audiorec_demo_app():
     #     wav_audio_data = None
     #     st.rerun()
 
-    current_time_seconds = time.time()
-    file_name = str(int(current_time_seconds * 1000))
     if wav_audio_data is not None:
         # display audio data as received on the Python side
         col_playback, col_space = st.columns([0.58, 0.42])
         with col_playback:
             st.audio(wav_audio_data, format="audio/wav")
-        st.markdown("### List of functions:")
-        st.markdown("1. Command detection")
-        if st.button("Predict", key=1):
-            command_detection(wav_audio_data, file_name)
-        st.markdown("2. Speaker verification")
-        if st.button("Predict", key=2):
-            speaker_verifcation(wav_audio_data, file_name)
-        st.markdown("3. Fake voice recognization")
-        if st.button("Predict", key=3):
-            fake_voice(wav_audio_data, file_name)
+        if st.button("Show Result"):
+            st.markdown("### List of functions:")
+            predict(wav_audio_data)
+        # st.markdown("1. Command detection")
+        # if st.button("Predict", key=1):
+        #     command_detection(wav_audio_data, file_name)
+        # st.markdown("2. Speaker verification")
+        # if st.button("Predict", key=2):
+        #     speaker_verifcation(wav_audio_data, file_name)
+        # st.markdown("3. Fake voice recognization")
+        # if st.button("Predict", key=3):
+        #     fake_voice(wav_audio_data, file_name)
+
+
+def predict(wav_audio_data):
+    current_time_seconds = time.time()
+    file_name = str(int(current_time_seconds * 1000))
+    create_spectrogram(wav_audio_data, file_name)
+
+    task1 = Predict(task=1, name=file_name)
+    st.markdown("1. Command detection: " + task1)
+
+    task2 = Predict(task=2, name=file_name)
+    st.markdown("2. Speaker verification: " + task2)
+
+    task3 = Predict(task=3, name=file_name)
+    st.markdown("3. Fake voice recognization: " + task3)
 
 
 def speaker_verifcation(wav_audio_data, file_name):
-    create_spectrogram(wav_audio_data, file_name)
+    # create_spectrogram(wav_audio_data, file_name)
     result = Predict(task=2, name=file_name)
     st.write("Result: " + result)
 
 
 def command_detection(wav_audio_data, file_name):
-    create_spectrogram(wav_audio_data, file_name)
+    # create_spectrogram(wav_audio_data, file_name)
     result = Predict(task=1, name=file_name)
     st.write("Result: " + result)
 
 
 def fake_voice(wav_audio_data, file_name):
-    create_spectrogram(wav_audio_data, file_name)
+    # create_spectrogram(wav_audio_data, file_name)
     result = Predict(task=3, name=file_name)
     st.write("Result: " + result)
 
